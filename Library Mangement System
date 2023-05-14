@@ -105,4 +105,40 @@ int main() {
     int choice;
 
     do {
-        printf
+        printf  "Library Management System Menu\n"
+        "==============================\n"
+        "1. Add a book\n"
+        "2. Display books\n"
+        "3. Borrow a book\n"
+        "4. Return a book\n"
+        "0. Exit\n"
+        "Enter your choice: ");
+        scanf("%d", &choice);
+        getchar();  // Consume newline character
+
+        switch (choice) {
+            case 1:
+                addBook();
+                break;
+            case 2:
+                displayBooks();
+                break;
+            case 3:
+                borrowBook();
+                break;
+            case 4:
+                returnBook();
+                break;
+            case 0:
+                printf("Exiting the program. Goodbye!\n");
+                break;
+            default:
+                printf("Invalid choice. Please try again.\n");
+                break;
+        }
+
+        printf("\n");
+    } while (choice != 0);
+
+    return 0;
+}
