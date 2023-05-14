@@ -1,1 +1,108 @@
-# C-Lab-Project
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_BOOKS 100
+#define MAX_TITLE_LENGTH 100
+#define MAX_AUTHOR_LENGTH 100
+
+typedef struct {
+    char title[MAX_TITLE_LENGTH];
+    char author[MAX_AUTHOR_LENGTH];
+    int available;
+} Book;
+
+Book library[MAX_BOOKS];
+int bookCount = 0;
+
+void addBook() {
+    if (bookCount >= MAX_BOOKS) {
+        printf("Library is full. Cannot add more books.\n");
+        return;
+    }
+
+    Book newBook;
+
+    printf("Enter the book title: ");
+    fgets(newBook.title, MAX_TITLE_LENGTH, stdin);
+    newBook.title[strcspn(newBook.title, "\n")] = '\0';  // Remove trailing newline
+
+    printf("Enter the author name: ");
+    fgets(newBook.author, MAX_AUTHOR_LENGTH, stdin);
+    newBook.author[strcspn(newBook.author, "\n")] = '\0';  // Remove trailing newline
+
+    newBook.available = 1;
+
+    library[bookCount] = newBook;
+    bookCount++;
+
+    printf("Book added successfully!\n");
+}
+
+void displayBooks() {
+    printf("Library Inventory:\n");
+    printf("==================\n");
+
+    if (bookCount == 0) {
+        printf("No books available.\n");
+        return;
+    }
+
+    printf("%-4s %-30s %-20s %s\n", "ID", "Title", "Author", "Status");
+
+    for (int i = 0; i < bookCount; i++) {
+        printf("%-4d %-30s %-20s %s\n", i + 1, library[i].title, library[i].author,
+               library[i].available ? "Available" : "Not available");
+    }
+}
+
+void borrowBook() {
+    int bookId;
+
+    displayBooks();
+    printf("Enter the book ID to borrow: ");
+    scanf("%d", &bookId);
+    getchar();  // Consume newline character
+
+    if (bookId <= 0 || bookId > bookCount) {
+        printf("Invalid book ID.\n");
+        return;
+    }
+
+    Book *selectedBook = &library[bookId - 1];
+
+    if (selectedBook->available) {
+        selectedBook->available = 0;
+        printf("You have borrowed the book '%s' by %s.\n", selectedBook->title, selectedBook->author);
+    } else {
+        printf("The book '%s' by %s is not available for borrowing.\n", selectedBook->title, selectedBook->author);
+    }
+}
+
+void returnBook() {
+    int bookId;
+
+    displayBooks();
+    printf("Enter the book ID to return: ");
+    scanf("%d", &bookId);
+    getchar();  // Consume newline character
+
+    if (bookId <= 0 || bookId > bookCount) {
+        printf("Invalid book ID.\n");
+        return;
+    }
+
+    Book *selectedBook = &library[bookId - 1];
+
+    if (!selectedBook->available) {
+        selectedBook->available = 1;
+        printf("You have returned the book '%s' by %s.\n", selectedBook->title, selectedBook->author);
+    } else {
+        printf("The book '%s' by %s is already in the library.\n", selectedBook->title, selectedBook->author);
+    }
+}
+
+int main() {
+    int choice;
+
+    do {
+        printf
